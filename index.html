@@ -96,8 +96,8 @@ header.scrolled{background:rgba(10,11,13,0.75);backdrop-filter:blur(18px) satura
 .mock-card .lbl{font-size:12px;color:var(--ink-dim);margin-bottom:10px;}
 .mock-card .num{font-size:22px;font-weight:700;letter-spacing:-.02em;}
 .mock-card .trend{font-size:11.5px;margin-top:6px;color:#7CFFC4;}
-.mock-chart{grid-column:span 4;margin-top:4px;border-radius:16px;border:1px solid var(--line);padding:18px 18px 6px;background:linear-gradient(160deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));}
-.mock-chart canvas{max-height:170px;}
+.mock-chart{grid-column:span 4;margin-top:4px;border-radius:16px;border:1px solid var(--line);padding:18px 18px 10px;background:linear-gradient(160deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));position:relative;height:180px;}
+.mock-chart canvas{position:absolute !important;left:18px;right:18px;top:18px;bottom:10px;width:calc(100% - 36px) !important;height:calc(100% - 28px) !important;}
 @media(max-width:800px){.mock-grid{grid-template-columns:repeat(2,1fr);}.mock-chart{grid-column:span 2;}}
 
 .kicker{color:var(--electric);font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;}
@@ -179,20 +179,39 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue-2);
 .currency-switch[data-active="usd"] .currency-thumb{transform:translateX(100%);}
 
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
-.stat-card{border-radius:18px;padding:20px;border:1px solid var(--line);background:linear-gradient(160deg,rgba(255,255,255,0.045),rgba(255,255,255,0.01));transition:transform .3s var(--ease),border-color .3s;}
+.stat-card{border-radius:18px;padding:20px;border:1px solid var(--line);background:linear-gradient(160deg,rgba(255,255,255,0.045),rgba(255,255,255,0.01));transition:transform .3s var(--ease),border-color .3s;min-width:0;}
 .stat-card:hover{transform:translateY(-3px);border-color:rgba(91,139,255,.3);}
 .stat-card .icon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(91,139,255,.12);margin-bottom:12px;}
 .stat-card .icon svg{width:15px;height:15px;stroke:var(--electric);}
 .stat-card .lbl{font-size:12px;color:var(--ink-dim);}
 .stat-card .value{font-size:23px;font-weight:700;letter-spacing:-.02em;margin-top:4px;}
 @media(max-width:1100px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:560px){.stat-grid{grid-template-columns:1fr;}}
+@media(max-width:560px){
+  .stat-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .stat-card{padding:14px;border-radius:14px;}
+  .stat-card .value{font-size:18px;}
+  .stat-card .lbl{font-size:11px;}
+  .stat-card .icon{width:26px;height:26px;margin-bottom:8px;}
+  .stat-card .icon svg{width:12px;height:12px;}
+}
 
-.card{border-radius:20px;border:1px solid var(--line);padding:22px;background:linear-gradient(160deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));margin-bottom:20px;}
+.card{border-radius:20px;border:1px solid var(--line);padding:22px;background:linear-gradient(160deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));margin-bottom:20px;min-width:0;}
 .card h3{font-size:15px;font-weight:600;margin-bottom:4px;}
 .card .card-sub{font-size:12.5px;color:var(--ink-dim);margin-bottom:16px;}
 .chart-row{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;}
 @media(max-width:900px){.chart-row{grid-template-columns:1fr;}}
+
+/* chart containers — fixed, explicit size prevents the Chart.js
+   "infinite growth" bug that happens when a responsive canvas sits
+   inside a CSS grid/flex parent with no bounded height */
+.chart-box{position:relative;width:100%;height:210px;}
+.chart-box canvas{position:absolute !important;left:0;top:0;width:100% !important;height:100% !important;}
+.chart-box.short{height:170px;}
+.chart-empty{font-size:12.5px;color:var(--ink-dimmer);text-align:center;padding:0;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+
+.period-switch{display:flex;align-items:center;gap:2px;background:rgba(255,255,255,0.04);border:1px solid var(--line-2);border-radius:999px;padding:3px;flex-shrink:0;}
+.period-switch button{padding:7px 13px;border-radius:999px;font-size:11.5px;font-weight:600;color:var(--ink-dim);transition:background .25s,color .25s;}
+.period-switch button.active{background:var(--blue);color:#fff;}
 
 .fab-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
 .fab{display:flex;align-items:center;gap:8px;padding:11px 16px;border-radius:14px;border:1px solid var(--line-2);background:rgba(255,255,255,0.03);font-size:13px;font-weight:500;transition:background .25s,transform .25s,border-color .25s;}
@@ -382,7 +401,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue-2);
         <div class="mock-card"><div class="lbl">Expenses</div><div class="num" data-count data-inr="62300" data-usd="748">₹0</div><div class="trend">-4.1% this month</div></div>
         <div class="mock-card"><div class="lbl">Profit</div><div class="num" data-count data-inr="122200" data-usd="1466">₹0</div><div class="trend">+18.7% this month</div></div>
         <div class="mock-card"><div class="lbl">Net Worth</div><div class="num" data-count data-inr="941800" data-usd="11302">₹0</div><div class="trend">+6.2% this month</div></div>
-        <div class="mock-chart"><canvas id="heroChart" height="60"></canvas></div>
+        <div class="mock-chart"><canvas id="heroChart"></canvas></div>
       </div>
     </div>
   </div>
@@ -549,8 +568,18 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue-2);
         <button class="fab" onclick="showTab('calendar')"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.6"/></svg> Calendar</button>
       </div>
       <div class="chart-row">
-        <div class="card"><h3>Revenue vs Expenses</h3><div class="card-sub">Last 7 months</div><canvas id="mainChart" height="140"></canvas></div>
-        <div class="card"><h3>Spending by category</h3><div class="card-sub">All time</div><canvas id="pieChart" height="140"></canvas></div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;">
+            <div><h3>Revenue vs Spent</h3><div class="card-sub" id="overviewChartSub">By month</div></div>
+            <div class="period-switch" id="overviewPeriodSwitch">
+              <button data-period="day">Day</button>
+              <button data-period="month" class="active">Month</button>
+              <button data-period="year">Year</button>
+            </div>
+          </div>
+          <div class="chart-box" id="mainChartBox"><canvas id="mainChart"></canvas></div>
+        </div>
+        <div class="card"><h3>Spending by category</h3><div class="card-sub">All time</div><div class="chart-box" id="pieChartBox"><canvas id="pieChart"></canvas></div></div>
       </div>
       <div class="card">
         <h3>Recent transactions</h3><div class="card-sub">Your last 5 entries</div>
@@ -597,8 +626,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue-2);
     <div class="tab-panel hidden" id="tab-statistics">
       <div class="stat-grid" id="statGridFull"></div>
       <div class="chart-row">
-        <div class="card"><h3>Monthly comparison</h3><div class="card-sub">Revenue vs expenses</div><canvas id="statMainChart" height="150"></canvas></div>
-        <div class="card"><h3>Expense breakdown</h3><div class="card-sub">By category</div><canvas id="statPieChart" height="150"></canvas></div>
+        <div class="card"><h3>Monthly comparison</h3><div class="card-sub">Revenue vs expenses</div><div class="chart-box" id="statMainChartBox"><canvas id="statMainChart"></canvas></div></div>
+        <div class="card"><h3>Expense breakdown</h3><div class="card-sub">By category</div><div class="chart-box" id="statPieChartBox"><canvas id="statPieChart"></canvas></div></div>
       </div>
     </div>
 
@@ -742,6 +771,7 @@ let currentCurrency = 'inr';
 let session = null; // {username}
 let calState = new Date();
 calState.setDate(1);
+let overviewPeriod = 'month'; // 'day' | 'month' | 'year'
 
 /* ---------------- storage helpers ---------------- */
 function loadUsers(){ try{ return JSON.parse(localStorage.getItem(DB_USERS)) || []; }catch(e){ return []; } }
@@ -1006,6 +1036,19 @@ function recentRowsHtml(list){
 }
 
 function safeChart(){ return typeof Chart !== 'undefined' && !window.__chartFailed; }
+
+/* --- period series builders: day / month / year --- */
+function dailySeries(transactions, daysBack){
+  const out = [];
+  const now = new Date();
+  for(let i=daysBack-1;i>=0;i--){
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate()-i);
+    const label = d.toLocaleDateString(undefined,{day:'numeric', month:'short'});
+    const inDay = transactions.filter(t => { const td=new Date(t.date); return td.getFullYear()===d.getFullYear() && td.getMonth()===d.getMonth() && td.getDate()===d.getDate(); });
+    out.push({label, income: inDay.filter(t=>t.type==='income').reduce((s,t)=>s+t.amountInr,0), expense: inDay.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amountInr,0)});
+  }
+  return out;
+}
 function monthlySeries(transactions, monthsBack){
   const out = [];
   const now = new Date();
@@ -1017,6 +1060,22 @@ function monthlySeries(transactions, monthsBack){
   }
   return out;
 }
+function yearlySeries(transactions, yearsBack){
+  const out = [];
+  const now = new Date();
+  for(let i=yearsBack-1;i>=0;i--){
+    const y = now.getFullYear()-i;
+    const inYear = transactions.filter(t => new Date(t.date).getFullYear()===y);
+    out.push({label: String(y), income: inYear.filter(t=>t.type==='income').reduce((s,t)=>s+t.amountInr,0), expense: inYear.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amountInr,0)});
+  }
+  return out;
+}
+function seriesForPeriod(transactions, period){
+  if(period==='day') return dailySeries(transactions, 14);
+  if(period==='year') return yearlySeries(transactions, 5);
+  return monthlySeries(transactions, 7);
+}
+
 function categoryBreakdown(transactions){
   const map = {};
   transactions.filter(t=>t.type==='expense').forEach(t => { map[t.category] = (map[t.category]||0) + t.amountInr; });
@@ -1025,26 +1084,51 @@ function categoryBreakdown(transactions){
 }
 
 function drawOverviewCharts(transactions){
-  if(!safeChart()){ document.querySelectorAll('#tab-overview canvas').forEach(c=>{ c.parentElement.innerHTML='<p style="font-size:12.5px;color:var(--ink-dimmer);text-align:center;padding:20px 0;">Chart preview unavailable offline.</p>'; }); return; }
-  const series = monthlySeries(transactions, 7);
-  const labels = series.map(s=>s.label);
-  const currencyLabelFor = v => currentCurrency==='inr' ? '₹'+Math.round(toDisplay(v,'inr')) : '$'+Math.round(toDisplay(v,'usd'));
+  const mcBox = document.getElementById('mainChartBox');
+  const pcBox = document.getElementById('pieChartBox');
+  if(!safeChart()){
+    mcBox.innerHTML = '<div class="chart-empty">Chart preview unavailable offline.</div>';
+    pcBox.innerHTML = '<div class="chart-empty">Chart preview unavailable offline.</div>';
+    return;
+  }
+  drawMainChart(transactions);
 
-  if(mainChart) mainChart.destroy();
-  const mc = document.getElementById('mainChart');
-  if(mc) mainChart = new Chart(mc, {type:'line', data:{labels, datasets:[
-    {label:'Revenue', data:series.map(s=>toDisplay(s.income,currentCurrency)), borderColor:'#5b8bff', backgroundColor:'rgba(91,139,255,0.12)', borderWidth:2.4, fill:true, tension:0.4, pointRadius:0},
-    {label:'Expenses', data:series.map(s=>toDisplay(s.expense,currentCurrency)), borderColor:'#ff8a8a', backgroundColor:'rgba(255,138,138,0.06)', borderWidth:2, fill:true, tension:0.4, pointRadius:0}
-  ]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top', align:'end', labels:{boxWidth:8,usePointStyle:true}}}, scales:{x:{grid:{color:'rgba(255,255,255,0.05)'}},y:{grid:{color:'rgba(255,255,255,0.05)'}}}}});
-
-  if(pieChart) pieChart.destroy();
-  const pc = document.getElementById('pieChart');
+  if(pieChart){ pieChart.destroy(); pieChart=null; }
   const brk = categoryBreakdown(transactions);
-  if(pc){
-    if(brk.labels.length===0){ pc.parentElement.innerHTML = '<p style="font-size:12.5px;color:var(--ink-dimmer);text-align:center;padding:20px 0;">Add an expense to see this chart.</p>'; }
-    else pieChart = new Chart(pc, {type:'doughnut', data:{labels:brk.labels, datasets:[{data:brk.values, backgroundColor:['#5b8bff','#4fd1ff','#7c6bff','#3ecf8e','#ffb86b','#525663'], borderWidth:0}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:8, usePointStyle:true, padding:12}}}}});
+  if(brk.labels.length===0){
+    pcBox.innerHTML = '<div class="chart-empty">Add an expense to see this chart.</div>';
+  } else {
+    if(!document.getElementById('pieChart')){ pcBox.innerHTML = '<canvas id="pieChart"></canvas>'; }
+    const pc = document.getElementById('pieChart');
+    pieChart = new Chart(pc, {type:'doughnut', data:{labels:brk.labels, datasets:[{data:brk.values, backgroundColor:['#5b8bff','#4fd1ff','#7c6bff','#3ecf8e','#ffb86b','#525663'], borderWidth:0}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:8, usePointStyle:true, padding:10, font:{size:11}}}}}});
   }
 }
+
+function drawMainChart(transactions){
+  const mcBox = document.getElementById('mainChartBox');
+  if(!document.getElementById('mainChart')){ mcBox.innerHTML = '<canvas id="mainChart"></canvas>'; }
+  const series = seriesForPeriod(transactions, overviewPeriod);
+  const labels = series.map(s=>s.label);
+
+  if(mainChart){ mainChart.destroy(); mainChart=null; }
+  const mc = document.getElementById('mainChart');
+  mainChart = new Chart(mc, {type:'line', data:{labels, datasets:[
+    {label:'Revenue', data:series.map(s=>toDisplay(s.income,currentCurrency)), borderColor:'#5b8bff', backgroundColor:'rgba(91,139,255,0.12)', borderWidth:2.4, fill:true, tension:0.4, pointRadius:0},
+    {label:'Expenses', data:series.map(s=>toDisplay(s.expense,currentCurrency)), borderColor:'#ff8a8a', backgroundColor:'rgba(255,138,138,0.06)', borderWidth:2, fill:true, tension:0.4, pointRadius:0}
+  ]}, options:{responsive:true, maintainAspectRatio:false, animation:{duration:400}, plugins:{legend:{position:'top', align:'end', labels:{boxWidth:8,usePointStyle:true, font:{size:11}}}}, scales:{x:{grid:{color:'rgba(255,255,255,0.05)'}, ticks:{font:{size:10}}},y:{grid:{color:'rgba(255,255,255,0.05)'}, ticks:{font:{size:10}}}}}});
+
+  const subLabel = overviewPeriod==='day' ? 'Last 14 days' : overviewPeriod==='year' ? 'Last 5 years' : 'Last 7 months';
+  const sub = document.getElementById('overviewChartSub'); if(sub) sub.textContent = subLabel;
+}
+
+document.getElementById('overviewPeriodSwitch').addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-period]');
+  if(!btn) return;
+  overviewPeriod = btn.dataset.period;
+  document.getElementById('overviewPeriodSwitch').querySelectorAll('button').forEach(b => b.classList.toggle('active', b===btn));
+  const data = currentData();
+  drawMainChart(data.transactions);
+});
 
 /* ---------------- Transactions ---------------- */
 function renderTransactions(){
@@ -1225,21 +1309,30 @@ function renderStatistics(){
     statCardHtml('Lifetime Expenses', totals.lifetime.expense, icon),
   ].join('');
 
-  if(!safeChart()) return;
+  const mcBox = document.getElementById('statMainChartBox');
+  const pcBox = document.getElementById('statPieChartBox');
+  if(!safeChart()){
+    mcBox.innerHTML = '<div class="chart-empty">Chart preview unavailable offline.</div>';
+    pcBox.innerHTML = '<div class="chart-empty">Chart preview unavailable offline.</div>';
+    return;
+  }
   const series = monthlySeries(data.transactions, 7);
-  if(statMainChart) statMainChart.destroy();
+  if(statMainChart){ statMainChart.destroy(); statMainChart=null; }
+  if(!document.getElementById('statMainChart')){ mcBox.innerHTML = '<canvas id="statMainChart"></canvas>'; }
   const mc = document.getElementById('statMainChart');
-  if(mc) statMainChart = new Chart(mc, {type:'bar', data:{labels:series.map(s=>s.label), datasets:[
+  statMainChart = new Chart(mc, {type:'bar', data:{labels:series.map(s=>s.label), datasets:[
     {label:'Revenue', data:series.map(s=>toDisplay(s.income,currentCurrency)), backgroundColor:'#5b8bff', borderRadius:6},
     {label:'Expenses', data:series.map(s=>toDisplay(s.expense,currentCurrency)), backgroundColor:'#ff8a8a', borderRadius:6}
-  ]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top', align:'end', labels:{boxWidth:8,usePointStyle:true}}}, scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.05)'}}}}});
+  ]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top', align:'end', labels:{boxWidth:8,usePointStyle:true, font:{size:11}}}}, scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.05)'}}}}});
 
-  if(statPieChart) statPieChart.destroy();
-  const pc = document.getElementById('statPieChart');
+  if(statPieChart){ statPieChart.destroy(); statPieChart=null; }
   const brk = categoryBreakdown(data.transactions);
-  if(pc){
-    if(brk.labels.length===0){ pc.parentElement.querySelector('canvas').replaceWith(Object.assign(document.createElement('p'),{innerText:'Add an expense to see this chart.', style:'font-size:12.5px;color:var(--ink-dimmer);text-align:center;padding:20px 0;'})); }
-    else statPieChart = new Chart(pc, {type:'doughnut', data:{labels:brk.labels, datasets:[{data:brk.values, backgroundColor:['#5b8bff','#4fd1ff','#7c6bff','#3ecf8e','#ffb86b','#525663'], borderWidth:0}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:8, usePointStyle:true, padding:12}}}}});
+  if(brk.labels.length===0){
+    pcBox.innerHTML = '<div class="chart-empty">Add an expense to see this chart.</div>';
+  } else {
+    if(!document.getElementById('statPieChart')){ pcBox.innerHTML = '<canvas id="statPieChart"></canvas>'; }
+    const pc = document.getElementById('statPieChart');
+    statPieChart = new Chart(pc, {type:'doughnut', data:{labels:brk.labels, datasets:[{data:brk.values, backgroundColor:['#5b8bff','#4fd1ff','#7c6bff','#3ecf8e','#ffb86b','#525663'], borderWidth:0}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:8, usePointStyle:true, padding:10, font:{size:11}}}}}});
   }
 }
 function daysSinceFirst(transactions){
